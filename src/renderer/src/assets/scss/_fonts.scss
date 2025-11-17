@@ -1,0 +1,35 @@
+/* 현대 산스 Head KR (한글용) */
+@font-face {
+  font-family: 'HyundaiSansHeadKR';
+  font-weight: 400; /* Light */
+  src: url('../fonts/HyundaiSansHeadKRLight.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HyundaiSansHeadKR';
+  font-weight: 500; /* Regular */
+  src: url('../fonts/HyundaiSansHeadKRRegular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HyundaiSansHeadKR';
+  font-weight: 700; /* Medium */
+  src: url('../fonts/HyundaiSansHeadKRMedium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HyundaiSansHeadOffice';
+  font-weight: 700; /* Medium */
+  src: url('../fonts/HyundaiSansHeadOffice-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HyundaiSansTextOffice';
+  font-weight: 700; /* Medium */
+  src: url('../fonts/HyundaiSansTextOffice-Medium.woff2') format('woff2');
+  font-display: swap;
+}

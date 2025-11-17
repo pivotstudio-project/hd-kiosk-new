@@ -1,0 +1,12 @@
+.page-common {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 685 / 1218;
+  height: 100vh;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+  }
+}

@@ -1,0 +1,13 @@
+.page-ev-screen {
+  position: relative;
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+
+  video {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    transform: translateY(-50%);
+  }
+}

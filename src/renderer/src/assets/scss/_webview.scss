@@ -1,0 +1,52 @@
+.page-webview {
+  width: 100vw;
+  height: 100vh;
+  background: #fff;
+
+  .page-webview__loading {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: calc(100vh - 100px);
+  }
+
+  .page-webview__loading.did-mode {
+    top: 100px;
+  }
+
+  .page-webview__controller {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100px;
+    padding: 0 1vw;
+    border-top: 1px solid #ddd;
+    background: #fff;
+  }
+
+  .page-webview__controller.did-mode {
+    top: 0;
+    bottom: initial;
+    border-top: initial;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .page-webview__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 60px;
+    border: none;
+    border-radius: 12px;
+    font-size: 22px;
+    font-weight: 500;
+  }
+}
