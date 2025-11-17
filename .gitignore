@@ -11,3 +11,5 @@ out
 /src/renderer/public/video-cover04.mov
 /src/renderer/public/video-cover05.mov
 /src/renderer/public/video-cover06.mov
+
+package-lock.json
