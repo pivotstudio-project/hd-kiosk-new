@@ -39,13 +39,19 @@ if (!gotTheLock) {
   const webViews: Map<string, WebContentsView> = new Map()
   // WebView 상태 관리 추가
   const webViewStates: Map<string, 'creating' | 'active' | 'destroying'> = new Map()
+  let isDownloadingUpdate = false
 
   // 유휴 상태 관리
   let currentTimeout: any = 60 * 1000 // 기본시간 60초
   let idleTimer
 
   function goHome(): void {
+    if (isDownloadingUpdate) {
+      console.log('[Idle] 업데이트 다운로드 중이므로 홈 이동을 건너뜁니다.')
+      return
+    }
     console.log('홈으로 돌아갑니다. 모든 WebView를 정리합니다.')
+
     if (mainWindow && mainWindow.webContents) {
       mainWindow.webContents.send('go-to-home')
     }
@@ -109,12 +115,17 @@ if (!gotTheLock) {
   // 다운로드 완료
   autoUpdater.on('update-downloaded', (info) => {
     log.info('[Updater] 다운로드 완료')
+    isDownloadingUpdate = false
     mainWindow?.webContents.send('update-downloaded', { version: info.version })
   })
 
   // 에러 발생
   autoUpdater.on('error', (err) => {
     log.error('[Updater] 에러:', err)
+
+    isDownloadingUpdate = false
+    resetIdelTimer()
+
     mainWindow?.webContents.send('update-error', err.message)
   })
   }
@@ -122,6 +133,12 @@ if (!gotTheLock) {
   // [IPC 통신] 렌더러에서 "다운로드 시작해!"라고 요청하면 실행
 ipcMain.on('start-download', () => {
   log.info('[Updater] 사용자 요청으로 다운로드 시작')
+  // [추가] 다운로드 모드 진입
+  isDownloadingUpdate = true
+  
+  // [추가] 현재 돌고 있는 유휴 타이머 즉시 해제 (중요)
+  if (idleTimer) clearTimeout(idleTimer)
+
   autoUpdater.downloadUpdate()
 })
 
@@ -984,5 +1001,18 @@ ipcMain.on('install-update', () => {
   ipcMain.on('quit-and-install', () => {
     console.log('[Updater] 사용자 요청으로 업데이트 적용 후 재시작')
     autoUpdater.quitAndInstall(true, true)
+  })
+
+  ipcMain.on('stop-idle-timer', () => {
+    console.log('[Main] 유휴 타이머 정지 요청')
+    if (idleTimer) {
+      clearTimeout(idleTimer)
+      idleTimer = null // 타이머 변수 초기화
+    }
+  })
+
+  ipcMain.on('start-idle-timer', () => {
+    console.log('[Main] 유휴 타이머 재시작 요청')
+    resetIdelTimer() // 기존에 만들어둔 타이머 리셋 함수 호출
   })
 }

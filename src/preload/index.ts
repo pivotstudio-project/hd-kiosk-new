@@ -17,7 +17,8 @@ const api = {
   },
   onUpdateDownloaded: (callback: () => void) => {
     ipcRenderer.on('update_downloaded', callback)
-  }
+  },
+  send: (channel: string, data?: any) => ipcRenderer.send(channel, data),
 }
 
 // DOM 이벤트를 잡아서 Main Process로 보내기
