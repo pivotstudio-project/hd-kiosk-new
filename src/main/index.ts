@@ -1,10 +1,20 @@
 import { app, BrowserWindow, ipcMain, WebContentsView, dialog } from 'electron'
-import { join } from 'path'
+import path, { join } from 'path'
 import { electronApp, is } from '@electron-toolkit/utils'
 import { writeFileSync, readFileSync, existsSync } from 'fs'
 import { exec } from 'child_process'
 import log from 'electron-log'
 import { autoUpdater } from 'electron-updater'
+
+// 1. 현재 실행 파일의 이름(또는 productName)을 감지
+const exeName = path.basename(process.execPath, '.exe') // 예: "HD Kiosk EV"
+
+// 2. 개발 모드가 아닐 때(배포판일 때), 데이터 경로를 강제로 분리
+if (!is.dev) {
+  // 예: C:\Users\User\AppData\Roaming\HD Kiosk EV
+  const newUserDataPath = join(app.getPath('appData'), exeName)
+  app.setPath('userData', newUserDataPath)
+}
 
 const storePath = join(app.getPath('userData'), 'kiosk.json')
 
@@ -976,6 +986,8 @@ ipcMain.on('install-update', () => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
   })
+
+
 
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
