@@ -124,7 +124,7 @@ html, body, #app {
 .secret-trigger {
   position: fixed;
   top: 0;
-  left: 0; /* 좌측 상단 */
+  right: 0; /* 우측 상단 */
   width: 100px;
   height: 100px;
   z-index: 999999; /* 모든 UI보다 위에 */
