@@ -32,7 +32,7 @@ function handleSecretClick() {
 }
 
 async function runResetProcess() {
-  const confirmMsg = '관리자 모드: 키오스크 설정을 초기화하시겠습니까?\n(앱이 재시작됩니다)'
+  const confirmMsg = '관리자 모드: 키오스크 설정을 초기화하시겠습니까?\n(앱이 재시작됩니다!!)'
   
   if (confirm(confirmMsg)) {
     try {
