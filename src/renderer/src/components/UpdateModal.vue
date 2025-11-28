@@ -68,7 +68,12 @@ const installNow = () => {
           <div class="progress-bar" :style="{ width: progress + '%' }"></div>
         </div>
         <p class="percent-text">{{ progress }}%</p>
-        <p class="sub-text">전원을 끄지 마세요.</p>
+        <p class="sub-text">
+          전원을 끄지 마세요.<br/>
+          <br />
+          다운로드 후 재설치까지 시간이 조금 걸립니다.<br/>
+          재실행 될 때까지 그대로 두세요.
+        </p>
       </div>
 
       <div v-else-if="updateStep === 'completed'">
