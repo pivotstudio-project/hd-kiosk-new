@@ -82,6 +82,16 @@ if (!gotTheLock) {
   // false: 감지 후 사용자 동의를 받아야 다운로드
   autoUpdater.autoDownload = false
 
+  const appName = app.name // "HD Kiosk EV" or "HD Kiosk DID"
+  
+  if (appName.includes('EV')) {
+    log.info('[Updater] EV 모드: latest-ev.yml 참조')
+    autoUpdater.channel = 'latest-ev'
+  } else if (appName.includes('DID')) {
+    log.info('[Updater] DID 모드: latest-did.yml 참조')
+    autoUpdater.channel = 'latest-did'
+  }
+
   // 3. 업데이트 확인 시작
   // *중요*: checkForUpdatesAndNotify() 대신 checkForUpdates() 사용
   // 이유: 키오스크 화면 위에 Windows 시스템 알림(Toast)이 뜨는 것을 방지하기 위함
