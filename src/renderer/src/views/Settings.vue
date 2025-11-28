@@ -91,7 +91,7 @@ onMounted(() => {
       </div>
 
       <div class="page-settings__reset">
-        <button @click="resetKiosk">키오스크 정보 초기화 1.0.1</button>
+        <button @click="resetKiosk">키오스크 정보 초기화 1.0.3</button>
       </div>
     </div>
   </div>
