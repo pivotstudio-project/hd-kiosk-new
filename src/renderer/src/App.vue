@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useKioskStore } from './stores/kiosk'
+import UpdateModal from './components/UpdateModal.vue'
 
 const router = useRouter()
 const kioskStore = useKioskStore()
@@ -41,5 +42,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <router-view />
+  <div>
+    <router-view />
+  </div>
+
+  <UpdateModal />
 </template>

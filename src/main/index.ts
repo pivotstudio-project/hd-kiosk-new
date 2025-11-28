@@ -74,7 +74,7 @@ if (!gotTheLock) {
   // 2. 자동 다운로드 설정
   // true: 업데이트 감지 시 즉시 백그라운드 다운로드 (키오스크에 권장)
   // false: 감지 후 사용자 동의를 받아야 다운로드
-  autoUpdater.autoDownload = true
+  autoUpdater.autoDownload = false
 
   // 3. 업데이트 확인 시작
   // *중요*: checkForUpdatesAndNotify() 대신 checkForUpdates() 사용
@@ -91,8 +91,7 @@ if (!gotTheLock) {
   // 업데이트가 있음 (자동 다운로드 시작됨)
   autoUpdater.on('update-available', (info) => {
     log.info('[Updater] 새 업데이트 발견:', info.version)
-    // 렌더러에 알려서 '업데이트 중...' 아이콘 등을 띄울 수 있음
-    mainWindow?.webContents.send('update-status', { status: 'available', version: info.version })
+    mainWindow?.webContents.send('update-available', { version: info.version })
   })
 
   // 업데이트 없음
@@ -103,24 +102,34 @@ if (!gotTheLock) {
 
   // 다운로드 진행률 (옵션: 화면에 진행바를 보여주고 싶을 때 사용)
   autoUpdater.on('download-progress', (progressObj) => {
-    // 로그가 너무 많이 쌓이지 않도록 정수 단위로만 로깅하거나 생략 가능
-    // log.info(`[Updater] 다운로드: ${progressObj.percent}%`)
-    mainWindow?.webContents.send('update-progress', Math.floor(progressObj.percent))
+    const percent = Math.floor(progressObj.percent)
+    mainWindow?.webContents.send('update-progress', percent)
   })
 
   // 다운로드 완료
   autoUpdater.on('update-downloaded', (info) => {
-    log.info('[Updater] 업데이트 다운로드 완료. 버전:', info.version)
-    // 렌더러에 알림 -> UI에서 "재시작하여 설치" 버튼 활성화 또는 자동 카운트다운
-    mainWindow?.webContents.send('update-status', { status: 'downloaded', version: info.version })
+    log.info('[Updater] 다운로드 완료')
+    mainWindow?.webContents.send('update-downloaded', { version: info.version })
   })
 
   // 에러 발생
   autoUpdater.on('error', (err) => {
-    log.error('[Updater] 에러 발생:', err)
-    mainWindow?.webContents.send('update-status', { status: 'error', message: err.message })
+    log.error('[Updater] 에러:', err)
+    mainWindow?.webContents.send('update-error', err.message)
   })
   }
+
+  // [IPC 통신] 렌더러에서 "다운로드 시작해!"라고 요청하면 실행
+ipcMain.on('start-download', () => {
+  log.info('[Updater] 사용자 요청으로 다운로드 시작')
+  autoUpdater.downloadUpdate()
+})
+
+// [IPC 통신] 렌더러에서 "재시작해!"라고 요청하면 실행
+ipcMain.on('install-update', () => {
+  log.info('[Updater] 설치 및 재시작')
+  autoUpdater.quitAndInstall(true, true)
+})
 
   // --- 인터페이스 및 페이지 설정 데이터 ---
   interface PageConfig {
