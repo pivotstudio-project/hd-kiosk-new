@@ -91,15 +91,19 @@ if (!gotTheLock) {
   // true: 업데이트 감지 시 즉시 백그라운드 다운로드 (키오스크에 권장)
   // false: 감지 후 사용자 동의를 받아야 다운로드
   autoUpdater.autoDownload = false
-
-  const appName = app.name // "HD Kiosk EV" or "HD Kiosk DID"
   
-  if (appName.includes('EV')) {
-    log.info('[Updater] EV 모드: latest-ev.yml 참조')
+  if (exeName.includes('EV')) {
+    log.info(`[Updater] EV 모드 감지 (${exeName}): latest-ev.yml 참조`)
     autoUpdater.channel = 'latest-ev'
-  } else if (appName.includes('DID')) {
-    log.info('[Updater] DID 모드: latest-did.yml 참조')
+    
+    // (선택 사항) 강제로 requestHeaders 등을 설정해야 할 수도 있으나 
+    // channel 설정만으로도 파일명 접두사가 바뀝니다.
+  } else if (exeName.includes('DID')) {
+    log.info(`[Updater] DID 모드 감지 (${exeName}): latest-did.yml 참조`)
     autoUpdater.channel = 'latest-did'
+  } else {
+    // [디버깅용] 어떤 모드도 아닐 경우 로그 남기기
+    log.warn(`[Updater] 모드 감지 실패 (${exeName}). 기본 latest.yml을 참조합니다.`)
   }
 
   // 3. 업데이트 확인 시작
