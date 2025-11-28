@@ -13,3 +13,4 @@ out
 /src/renderer/public/video-cover06.mov
 
 package-lock.json
+.env

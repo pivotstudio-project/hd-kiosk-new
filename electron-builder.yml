@@ -9,7 +9,7 @@ publish:
   provider: github
   owner: pivotstudio-project
   repo: hd-kiosk-new
-  # private: true           # 만약 비공개(Private) 저장소라면 이 주석을 해제하세요.
+  private: false
 
 files:
   - dist
