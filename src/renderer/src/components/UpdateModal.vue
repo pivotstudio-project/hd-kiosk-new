@@ -77,7 +77,7 @@ const installNow = () => {
       </div>
 
       <div v-else-if="updateStep === 'completed'">
-        <h2>다운로드 완료!</h2>
+        <h2>[다운로드 완료]</h2>
         <p>업데이트를 적용하기 위해 재시작합니다.</p>
         <div class="btn-group">
           <button @click="installNow" class="btn-ok">지금 재시작</button>
