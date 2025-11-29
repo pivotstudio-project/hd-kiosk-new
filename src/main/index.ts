@@ -91,6 +91,9 @@ if (!gotTheLock) {
   // true: 업데이트 감지 시 즉시 백그라운드 다운로드 (키오스크에 권장)
   // false: 감지 후 사용자 동의를 받아야 다운로드
   autoUpdater.autoDownload = false
+
+  // 전체 업데이트 반영
+  autoUpdater.disableDifferentialDownload = true
   
   if (exeName.includes('EV')) {
     log.info(`[Updater] EV 모드 감지 (${exeName}): latest-ev.yml 참조`)
