@@ -2,6 +2,8 @@ directories:
   output: dist
   buildResources: build
 
+asar: true
+
 # [공통] GitHub 배포 설정
 publish:
   provider: github
@@ -11,10 +13,12 @@ publish:
 
 # [공통] 포함할 파일
 files:
-  - dist
   - out
   - resources/**
   - package.json
+  - "!**/*.map"
+  - "!**/*.ts"
+  - "!**/*.md"
 
 # [공통] 윈도우 빌드 설정
 win:

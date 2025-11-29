@@ -1,6 +1,6 @@
 {
   "name": "hd-kiosk",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "An Electron application with Vue and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -34,7 +34,6 @@
     "electron-store": "^10.1.0",
     "electron-updater": "^6.3.9",
     "pinia": "^3.0.3",
-    "sass": "^1.90.0",
     "swiper": "^11.2.10",
     "vue-router": "^4.5.1"
   },
@@ -51,6 +50,7 @@
     "eslint": "^9.31.0",
     "eslint-plugin-vue": "^10.3.0",
     "prettier": "^3.6.2",
+    "sass": "^1.94.2",
     "typescript": "^5.8.3",
     "vite": "^7.0.5",
     "vue": "^3.5.17",
