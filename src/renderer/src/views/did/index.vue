@@ -31,7 +31,6 @@ import img2 from '../../assets/did-cover02.jpg'
 import img3 from '../../assets/did-cover03.jpg'
 import img4 from '../../assets/did-cover04.jpg'
 import img5 from '../../assets/did-cover05.jpg'
-import img7 from '../../assets/did-cover07.png'
 
 const modules = [EffectFade, Autoplay]
 
@@ -42,7 +41,6 @@ const originalSlides = [
   { type: 'image', to: '/did/hub', img: img3, delay: 5000 },
   { type: 'image', to: '/did/hub', img: img4, delay: 5000 },
   { type: 'image', to: '/did/hub', img: img5, delay: 5000 },
-  { type: 'image', to: '/did/hub', img: img7, delay: 60000 },
   { type: 'custom', delay: 5000 }
 ]
 
