@@ -151,7 +151,6 @@ if (!gotTheLock) {
     log.error('[Updater] 에러:', err)
 
     isDownloadingUpdate = false
-    resetIdelTimer()
 
     mainWindow?.webContents.send('update-error', err.message)
   })

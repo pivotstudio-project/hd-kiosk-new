@@ -1,7 +1,7 @@
 {
   "name": "hd-kiosk",
-  "version": "2.0.0",
-  "description": "An Electron application with Vue and TypeScript",
+  "version": "2.0.1",
+  "description": "현대차 키오스크",
   "main": "./out/main/index.js",
   "author": "example.com",
   "homepage": "https://electron-vite.org",
@@ -36,6 +36,9 @@
     "pinia": "^3.0.3",
     "swiper": "^11.2.10",
     "vue-router": "^4.5.1"
+  },
+  "build": {
+    "generateUpdatesFilesForAllChannels": true
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "3.0.0",
