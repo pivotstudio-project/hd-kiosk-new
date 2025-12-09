@@ -3,6 +3,7 @@ directories:
   buildResources: build
 
 asar: true
+generateUpdatesFilesForAllChannels: true
 
 # [공통] GitHub 배포 설정
 publish:
@@ -15,7 +16,8 @@ publish:
 files:
   - out
   - resources/**
-  - package.json
+  - package.json,
+  - node_modules,
   - "!**/*.map"
   - "!**/*.ts"
   - "!**/*.md"
