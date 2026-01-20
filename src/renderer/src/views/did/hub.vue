@@ -51,7 +51,13 @@ onMounted(async () => {
 <template>
   <section class="page-did-hub">
     <button class="quit-button" @click="quitApp">앱 종료</button>
-    <template v-for="item in groupB" :key="item.id">
+    <img class="logo" src="/logo01.png" />
+    <div class="page-did-hub__contents">
+        <h1>{{ groupB[0].label }}</h1>
+        <p>현대자동차의 특별하고 스마트한<br />월별 구매혜택/차종별 구매혜택</p>
+        <button @click="openLink(groupB[0].id, groupB[0].pageName)">자세히 보기</button>
+      </div>
+    <!-- <template v-for="item in groupB" :key="item.id">
       <div class="page-did-hub__contents" :class="{ gray: item.id === 'save' }">
         <h1>{{ item.label }}</h1>
         <template v-if="item.id === 'benefit'">
@@ -62,7 +68,7 @@ onMounted(async () => {
         </template>
         <button @click="openLink(item.id, item.pageName)">자세히 보기</button>
       </div>
-    </template>
+    </template> -->
   </section>
 </template>
 
