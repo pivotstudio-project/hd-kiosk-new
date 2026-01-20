@@ -148,13 +148,32 @@ if (!gotTheLock) {
 
   // 에러 발생
   autoUpdater.on('error', (err) => {
-    log.error('[Updater] 에러:', err)
+    const message = err?.message ?? ''
 
+    // 🔕 업데이트 대상 아님 → 무시할 에러들
+    const ignorableErrors = [
+      '404',
+      'Cannot find latest',
+      'No published versions',
+      'ERR_UPDATER_INVALID_RELEASE_FEED',
+      'HttpError: 404'
+    ]
+
+    const isIgnorable = ignorableErrors.some((msg) =>
+      message.includes(msg)
+    )
+
+    if (isIgnorable) {
+      log.info('[Updater] 업데이트 대상 아님 (에러 무시):', message)
+      return
+    }
+
+    // ❗ 진짜 문제만 사용자에게 표시
+    log.error('[Updater] 업데이트 오류:', err)
     isDownloadingUpdate = false
-
-    mainWindow?.webContents.send('update-error', err.message)
+    mainWindow?.webContents.send('update-error', message)
   })
-  }
+}
 
   // [IPC 통신] 렌더러에서 "다운로드 시작해!"라고 요청하면 실행
 ipcMain.on('start-download', () => {
