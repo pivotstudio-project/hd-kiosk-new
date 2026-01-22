@@ -17,8 +17,6 @@ const pageName = route.query.name as string
 const url = route.query.url as string
 const pageType = route.query.type as 'ev' | 'did' | undefined
 
-alert(pageType)
-
 /* -----------------------------
  * 상태값
  * ----------------------------- */
