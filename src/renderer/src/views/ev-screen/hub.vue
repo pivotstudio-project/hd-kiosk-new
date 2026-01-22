@@ -24,7 +24,7 @@ const splitIntoRows = (items: any[], pattern: number[]) => {
 // 페이지 이동
 const openLink = (pageId: string, pageName: string): void => {
   if (pageId) {
-    router.push({ name: 'webview', query: { id: pageId, name: pageName } })
+    router.push({ name: 'webview', query: { id: pageId, name: pageName, type: 'ev' } })
   } else {
     console.error('페이지 ID가 없어 이동할 수 없습니다.')
   }
@@ -48,7 +48,7 @@ onBeforeMount(async () => {
   if (allPages.value) {
     isLoading.value = false
   }
-  window.api?.setIdleTimeout?.(30 * 1000)
+  window.api?.setIdleTimeout?.(30 * 2000)
 })
 </script>
 

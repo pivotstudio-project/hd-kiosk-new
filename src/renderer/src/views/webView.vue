@@ -15,6 +15,9 @@ const kioskStore = useKioskStore()
 const pageId = route.query.id as string
 const pageName = route.query.name as string
 const url = route.query.url as string
+const pageType = route.query.type as 'ev' | 'did' | undefined
+
+alert(pageType)
 
 /* -----------------------------
  * 상태값
@@ -237,9 +240,12 @@ watch(currentUrl, (url) => {
     window.api?.setIdleTimeout?.(30 * 60 * 1000)
     console.log('IDLE_TIMEOUT 연장: 5분')
   } else {
-    // 기본값 60초로 초기화
-    window.api?.setIdleTimeout?.(60 * 1000)
-  }
+    let timeout = 60 * 1000
+
+    if (pageType === 'ev') timeout = 5 * 60 * 1000   // 5분
+    if (pageType === 'did') timeout = 3 * 60 * 1000  // 3분
+    
+    window.api?.setIdleTimeout?.(timeout)  }
 })
 </script>
 

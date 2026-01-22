@@ -51,9 +51,19 @@ if (!gotTheLock) {
   const webViewStates: Map<string, 'creating' | 'active' | 'destroying'> = new Map()
   let isDownloadingUpdate = false
 
+
+  const IDLE_TIMEOUT_DID = 3 * 60 * 1000 // 3분
+  const IDLE_TIMEOUT_EV = 5 * 60 * 1000 // 5분
+
+  function getDefaultIdleTimeout(): number {
+    if (exeName.includes('DID')) return IDLE_TIMEOUT_DID
+    if (exeName.includes('EV')) return IDLE_TIMEOUT_EV
+    return 60 * 1000 // fallback
+  }
+
   // 유휴 상태 관리
-  let currentTimeout: any = 60 * 1000 // 기본시간 60초
-  let idleTimer
+  let currentTimeout: number = getDefaultIdleTimeout()
+  let idleTimer: NodeJS.Timeout | null = null
 
   function goHome(): void {
     if (isDownloadingUpdate) {
@@ -74,11 +84,15 @@ if (!gotTheLock) {
   }
 
   function resetIdelTimer(timeout?: number): void {
-    console.log('타이머 리셋')
-    clearTimeout(idleTimer)
-    if (timeout) currentTimeout = timeout
+    if (idleTimer) clearTimeout(idleTimer)
+
+    if (typeof timeout === 'number') {
+      currentTimeout = timeout
+    }
+
     idleTimer = setTimeout(goHome, currentTimeout)
-    console.log('타이머 리셋', currentTimeout)
+
+    console.log('[Idle] timeout:', currentTimeout)
   }
 
   // 자동 업데이트 함수
@@ -1006,6 +1020,7 @@ ipcMain.on('install-update', () => {
     electronApp.setAppUserModelId('com.hdkiosk')
     createWindow().then(() => {
       setupAutoUpdater()
+      resetIdelTimer()
     })
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow()

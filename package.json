@@ -1,6 +1,6 @@
 {
   "name": "hd-kiosk",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "An Electron application with Vue and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -24,7 +24,9 @@
     "build:mac": "npm run build && electron-builder --mac --publish always",
     "build:linux": "npm run build && electron-builder --linux --publish always",
     "build:ev": "cross-env VITE_KIOSK_MODE=ev-screen npm run build && electron-builder --win --config.productName=\"HD Kiosk EV\" --config.appId=\"com.hdkiosk.ev\" --config.win.executableName=\"HD Kiosk EV\" --config.nsis.shortcutName=\"HD Kiosk EV\" --config.artifactName=\"HD-Kiosk-EV-Setup-${version}.exe\" --config.publish.channel=\"latest-ev\" --config.directories.output=\"dist/ev\" --publish always",
-    "build:did": "cross-env VITE_KIOSK_MODE=did npm run build && electron-builder --win --config.productName=\"HD Kiosk DID\" --config.appId=\"com.hdkiosk.did\" --config.win.executableName=\"HD Kiosk DID\" --config.nsis.shortcutName=\"HD Kiosk DID\" --config.artifactName=\"HD-Kiosk-DID-Setup-${version}.exe\" --config.publish.channel=\"latest-did\" --config.directories.output=\"dist/did\" --publish always"
+    "build:did": "cross-env VITE_KIOSK_MODE=did npm run build && electron-builder --win --config.productName=\"HD Kiosk DID\" --config.appId=\"com.hdkiosk.did\" --config.win.executableName=\"HD Kiosk DID\" --config.nsis.shortcutName=\"HD Kiosk DID\" --config.artifactName=\"HD-Kiosk-DID-Setup-${version}.exe\" --config.publish.channel=\"latest-did\" --config.directories.output=\"dist/did\" --publish always",
+    "build:win:did": "npm run build && electron-builder --win --dir --config.win.executableName=\"HD Kiosk DID\"",
+    "build:win:ev": "npm run build && electron-builder --win --dir --config.win.executableName=\"HD Kiosk EV\""
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
