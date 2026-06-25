@@ -219,6 +219,31 @@ ipcMain.on('install-update', () => {
 
   const pages: PageConfig[] = [
     {
+      // The new GRANDEUR 버튼 전용 (허브 그룹 미지정 → 자동 목록엔 안 나오고 버튼으로만 진입)
+      id: 'grandeur',
+      label: 'The new GRANDEUR',
+      pageName: 'The new GRANDEUR',
+      url: 'https://www.hyundai.com/kr/ko/e/vehicles/the-new-grandeur/intro',
+      // 그랜저 콘텐츠(#carModelInfo) 외 비-그랜저 요소 숨김:
+      // 헤더(GNB)/유틸바/푸터/플로팅/브레드크럼 + 자동으로 뜨는 구매상담 팝업
+      // + 신청/이탈로 빠지는 CTA 버튼바 2종:
+      //   · 인트로 showroom CTA(구매상담신청/내차만들기/시승신청)
+      //   · 구매정보 액션바(내차만들기/시승신청/구매상담신청/공유하기)
+      removeSelectors: [
+        '.header',
+        '.wrap-header',
+        '.util',
+        '.foot-area',
+        '.area-floating',
+        '.top-breadcrumb',
+        '.breadcrumb',
+        '.v-modal',
+        '.recommend-popup',
+        '.menu-showroom .btn-group',
+        '.benefits .detail .btn-group'
+      ]
+    },
+    {
       id: 'explorer',
       label: '내 차 추천받기',
       pageName: '내 차 추천받기',
@@ -582,11 +607,14 @@ ipcMain.on('install-update', () => {
     view.webContents.on('did-navigate', handleNavigate)
     view.webContents.on('did-navigate-in-page', handleNavigate)
 
+    // DOM이 준비되는 즉시(아직 뷰는 화면에 노출되기 전) 숨김 CSS를 주입한다.
+    // insertCSS로 넣은 스타일시트는 문서 내내 유지되므로, SPA가 헤더를 나중에
+    // 렌더해도 처음부터 display:none이 적용되어 "보였다 사라지는" 흔들림이 없어진다.
+    view.webContents.on('dom-ready', applyHide)
+
     view.webContents.on('did-finish-load', () => {
-      // 페이지 로드 완료 후 CSS 적용
-      setTimeout(() => {
-        applyHide()
-      }, 100) // 100ms 지연으로 DOM 완전 렌더링 후 적용
+      // 안전망: 늦게 렌더되는 요소까지 한 번 더 숨김 보장
+      applyHide()
 
       mainWindow?.webContents.send('loading-status', { id: pageConfig.id, status: false })
       isLoading = false
@@ -614,11 +642,9 @@ ipcMain.on('install-update', () => {
       }
     })
 
-    // 페이지 내 네비게이션에서도 CSS 적용
+    // 페이지 내 네비게이션에서도 CSS 적용 (지연 없이 즉시)
     view.webContents.on('did-navigate-in-page', () => {
-      setTimeout(() => {
-        applyHide()
-      }, 100)
+      applyHide()
     })
 
     // 팝업 처리 개선

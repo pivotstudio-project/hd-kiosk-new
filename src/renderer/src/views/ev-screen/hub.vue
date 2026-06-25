@@ -30,6 +30,11 @@ const openLink = (pageId: string, pageName: string): void => {
   }
 }
 
+// The new GRANDEUR 버튼 → 그랜저 인트로 페이지로 이동
+const openGrandeur = (): void => {
+  router.push({ name: 'webview', query: { id: 'grandeur', name: 'The new GRANDEUR', type: 'ev' } })
+}
+
 // 종료 처리
 const quitApp = async (): Promise<void> => {
   try {
@@ -65,13 +70,16 @@ onBeforeMount(async () => {
           :key="'row-' + rowIndex"
           class="btn-row"
         >
-          <button
-            v-for="item in row"
-            :key="item.id"
-            @click="openLink(item.id, item.pageName)"
-          >
-            <span v-html="item.label"></span>
-          </button>
+          <template v-for="item in row" :key="item.id">
+            <!-- '내 차 추천받기'(explorer) 앞에 The new GRANDEUR 버튼 -->
+            <button v-if="item.id === 'explorer'" class="btn-grandeur" @click="openGrandeur">
+              The new GRANDEUR
+            </button>
+
+            <button @click="openLink(item.id, item.pageName)">
+              <span v-html="item.label"></span>
+            </button>
+          </template>
         </div>
       </div>
     </div>

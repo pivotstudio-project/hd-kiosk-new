@@ -59,6 +59,28 @@
       border-radius: 2vw;
       color: #424242;
     }
+
+    // The new GRANDEUR 전용 버튼 — 검정 배경 / 흰 글씨, 현대산스 Medium(700).
+    // 보더 두께는 기존 버튼(.2vw)을 그대로 상속. 펄스는 배경색만 밝아졌다 어두워졌다.
+    button.btn-grandeur {
+      background: #000;
+      color: #fff;
+      font-family: 'HyundaiSansHeadKR', sans-serif;
+      font-weight: 700;
+      mix-blend-mode: normal; // multiply 시 검정/흰 보더가 배경에 묻히므로 해제
+      animation: grandeur-pulse 2.6s ease-in-out infinite;
+    }
+  }
+}
+
+// GRANDEUR 버튼 시선 유도용 펄스 (배경색만 밝아졌다 어두워졌다)
+@keyframes grandeur-pulse {
+  0%,
+  100% {
+    background-color: #000;
+  }
+  50% {
+    background-color: #5e5e5e;
   }
 }
 
