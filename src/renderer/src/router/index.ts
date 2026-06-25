@@ -73,6 +73,15 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   // 1. 앱이 실행되고 처음으로 루트('/') 경로, 즉 세팅 화면에 진입하려 할 때만 검사
   if (to.path === '/' && from.matched.length === 0) {
+    // [개발 전용] dev 모드에서 VITE_KIOSK_MODE가 주입되면
+    // kiosk.json/설정화면을 모두 건너뛰고 해당 모드로 곧장 진입한다.
+    // (프로덕션 빌드에서는 import.meta.env.DEV가 false라 동작하지 않음)
+    const devForcedMode = import.meta.env.VITE_KIOSK_MODE
+    if (import.meta.env.DEV && devForcedMode) {
+      console.log(`[Router] (dev) VITE_KIOSK_MODE=${devForcedMode} → 해당 모드로 직행`)
+      return next(`/${devForcedMode}`)
+    }
+
     try {
       const { ipcRenderer } = window.electron || {}
       

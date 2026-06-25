@@ -1,6 +1,6 @@
 {
   "name": "hd-kiosk",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "An Electron application with Vue and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -17,6 +17,8 @@
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
+    "dev:ev": "cross-env VITE_KIOSK_MODE=ev-screen electron-vite dev",
+    "dev:did": "cross-env VITE_KIOSK_MODE=did electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",

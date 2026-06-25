@@ -54,6 +54,14 @@ onMounted(async () => {
   // 1. 터치 키보드 숨기기
   window.api?.hideTouchKeyboard()
 
+  // 2-0. [개발 전용] VITE_KIOSK_MODE가 주입되면 kiosk.json 대신 env 값으로 스토어를 채운다.
+  //       (뒤로가기/홈으로 분기가 currentMode에 의존하므로 반드시 설정 필요)
+  const devForcedMode = import.meta.env.VITE_KIOSK_MODE
+  if (import.meta.env.DEV && devForcedMode && !kioskStore.currentMode) {
+    kioskStore.setMode(devForcedMode)
+    kioskStore.setKioskName('dev')
+  }
+
   // 2. [핵심 수정] 앱 실행 시 Pinia Store가 비어있다면, 파일(kiosk.json)에서 읽어와 동기화
   if (!kioskStore.currentMode) {
     try {

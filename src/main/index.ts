@@ -588,13 +588,13 @@ ipcMain.on('install-update', () => {
         applyHide()
       }, 100) // 100ms 지연으로 DOM 완전 렌더링 후 적용
 
-      mainWindow?.webContents.send('loading-status', false)
+      mainWindow?.webContents.send('loading-status', { id: pageConfig.id, status: false })
       isLoading = false
     })
 
     view.webContents.on('did-fail-load', (_, code, desc) => {
       console.error(`Failed to load ${pageConfig.id}: ${desc} (${code})`)
-      mainWindow?.webContents.send('loading-status', false)
+      mainWindow?.webContents.send('loading-status', { id: pageConfig.id, status: false })
       isLoading = false
 
       const ignoredErrorCodes = [-3, -2]
@@ -609,7 +609,7 @@ ipcMain.on('install-update', () => {
 
     view.webContents.on('did-start-loading', () => {
       if (!isLoading) {
-        mainWindow?.webContents.send('loading-status', true)
+        mainWindow?.webContents.send('loading-status', { id: pageConfig.id, status: true })
         isLoading = true
       }
     })
@@ -712,21 +712,22 @@ ipcMain.on('install-update', () => {
       const onLoad = () => {
         clearTimeout(timeout)
 
-        // 로드 완료 후 bounds 설정
-        setTimeout(() => {
-          if (!view.webContents.isDestroyed()) {
-            const kioskInfo = loadKioskInfo()
-            const yOffset = kioskInfo.mode === 'did' ? 100 : 0
+        // 로드 완료 즉시 bounds 설정 (스피너가 꺼지는 did-finish-load 시점과 일치시켜
+        // 콘텐츠 배치 전 흰 화면이 노출되는 틈을 없앤다)
+        if (!view.webContents.isDestroyed()) {
+          // dev에서 VITE_KIOSK_MODE로 강제 실행한 경우 kiosk.json보다 env를 우선한다.
+          // (프로덕션 패키지에는 이 env가 없으므로 자동으로 kiosk.json을 따른다)
+          const effectiveMode = process.env.VITE_KIOSK_MODE || loadKioskInfo().mode
+          const yOffset = effectiveMode === 'did' ? 100 : 0
 
-            view.setBounds({
-              x: 0,
-              y: yOffset,
-              width: bounds.width,
-              height: bounds.height - 100
-            })
-          }
-          resolve()
-        }, 100) // DOM 렌더링 완료를 위한 지연
+          view.setBounds({
+            x: 0,
+            y: yOffset,
+            width: bounds.width,
+            height: bounds.height - 100
+          })
+        }
+        resolve()
       }
 
       const onError = (_, code: number, desc: string) => {
@@ -839,6 +840,12 @@ ipcMain.on('install-update', () => {
         console.log(`[WebView] ${id} activated successfully`)
       } catch (error) {
         console.error(`Failed to create/show webview ${id}:`, error)
+        // 타임아웃/로드 실패 시 렌더러에 알려 흰 화면 대신 안내/재시도가 뜨도록 함
+        mainWindow?.webContents.send('webview-load-failed', {
+          id,
+          errorCode: -1,
+          errorDescription: String((error as Error)?.message ?? error)
+        })
         await destroyWebViewSafely(id) // 실패 시에는 확실히 파괴
       }
     } else if (action === 'hide') {

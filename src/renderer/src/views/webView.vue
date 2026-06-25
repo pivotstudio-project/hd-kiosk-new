@@ -21,11 +21,13 @@ const pageType = route.query.type as 'ev' | 'did' | undefined
  * 상태값
  * ----------------------------- */
 const loading = ref(true)
+const loadError = ref(false)
 const canGoBack = ref(false)
 const startTime = ref<number>(0)
 const currentUrl = ref<string>('')
 const initialCatalogUrl = ref<string>('')
 let hasExited = false
+let autoRetried = false
 
 /* -----------------------------
  * 공통 데이터 (API 호출용)
@@ -93,6 +95,19 @@ const goBack = async (): Promise<void> => {
       router.replace('/stand-by-me')
       break
   }
+}
+
+const retryLoad = (): void => {
+  loadError.value = false
+  loading.value = true
+  // 메인에 동일 뷰 재표시 요청 → URL 재로드
+  ipcRenderer?.send('manage-webview', { action: 'show', id: pageId })
+}
+
+// 사용자가 직접 '다시 시도'를 누른 경우 자동 재시도 카운터를 리셋
+const manualRetry = (): void => {
+  autoRetried = false
+  retryLoad()
 }
 
 const goHome = async (): Promise<void> => {
@@ -193,9 +208,28 @@ onMounted(async () => {
     }
   })
 
-  // 로딩 상태 수신
-  ipcRenderer.on('loading-status', (_, status: boolean) => {
-    loading.value = status
+  // 로딩 상태 수신 (자기 뷰의 신호만 반영 — 백그라운드 뷰의 about:blank 로딩 등
+  // 다른 뷰의 로딩 완료 신호가 현재 페이지 스피너를 먼저 꺼버려 흰 화면이 뜨는 문제 방지)
+  ipcRenderer.on('loading-status', (_, payload: { id: string; status: boolean }) => {
+    if (!payload || payload.id !== pageId) return
+    if (payload.status) loadError.value = false // 로딩 재시작 시 에러 화면 해제
+    loading.value = payload.status
+  })
+
+  // 로드 실패 수신 — 흰 화면 대신 자동 1회 재시도 후, 그래도 실패하면 안내 화면 표시
+  ipcRenderer.on('webview-load-failed', (_, payload: { id: string }) => {
+    if (!payload || payload.id !== pageId) return
+
+    if (!autoRetried) {
+      autoRetried = true
+      console.warn(`[${pageId}] 로드 실패 → 자동 재시도`)
+      setTimeout(retryLoad, 1500)
+      return
+    }
+
+    console.error(`[${pageId}] 재시도 후에도 로드 실패 → 안내 화면 표시`)
+    loading.value = false
+    loadError.value = true
   })
 
   // canGoBack 감지 주기 실행
@@ -209,6 +243,7 @@ onUnmounted(() => {
     ipcRenderer.send('manage-webview', { action: 'hide', id: pageId })
     ipcRenderer.removeAllListeners('loading-status')
     ipcRenderer.removeAllListeners('webview-url-changed')
+    ipcRenderer.removeAllListeners('webview-load-failed')
   }
 })
 
@@ -259,6 +294,20 @@ watch(currentUrl, (url) => {
       <p>페이지 연결 중 입니다.</p>
     </div>
 
+    <!-- 로드 실패 안내 -->
+    <div
+      v-if="loadError"
+      class="page-webview__error"
+      :class="{ 'did-mode': kioskStore.currentMode === 'did' }"
+    >
+      <p class="page-webview__error-title">페이지를 불러오지 못했습니다.</p>
+      <p class="page-webview__error-desc">네트워크 상태를 확인한 뒤 다시 시도해주세요.</p>
+      <div class="page-webview__error-btns">
+        <button class="page-webview__btn" @click="manualRetry">다시 시도</button>
+        <button class="page-webview__btn" @click="goHome">홈으로</button>
+      </div>
+    </div>
+
     <!-- 컨트롤러 -->
     <div class="page-webview__controller" :class="{ 'did-mode': kioskStore.currentMode === 'did' }">
       <button class="page-webview__btn" @click="goBack">
@@ -271,6 +320,52 @@ watch(currentUrl, (url) => {
 </template>
 
 <style scoped>
+.page-webview__error {
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 100px);
+  background: #fff;
+  z-index: 10;
+}
+
+.page-webview__error.did-mode {
+  top: 100px;
+}
+
+.page-webview__error-title {
+  font-size: 1.6em;
+  font-weight: 600;
+  color: #002c5f;
+}
+
+.page-webview__error-desc {
+  margin-top: 12px;
+  font-size: 1.1em;
+  color: #666;
+}
+
+.page-webview__error-btns {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.page-webview__error-btns .page-webview__btn {
+  width: 200px;
+  height: 60px;
+  border: none;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: 500;
+  background: #f0f0f0;
+}
+
 .spinner {
   border: 8px solid #ddd;
   border-top: 8px solid #002c5f;

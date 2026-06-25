@@ -11,6 +11,9 @@
   }
 }
 
-* {
+// 프로덕션(키오스크)에서만 커서를 숨긴다. dev에서는 포인터가 보이도록
+// main.ts에서 import.meta.env.PROD일 때만 html에 .hide-cursor 클래스를 부여한다.
+.hide-cursor,
+.hide-cursor * {
   cursor: none !important;
 }
