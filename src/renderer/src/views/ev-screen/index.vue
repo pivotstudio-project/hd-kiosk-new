@@ -7,8 +7,20 @@ import 'swiper/css/effect-fade'
 
 const modules = [EffectFade, Autoplay]
 
-// 각 슬라이드별 개별 딜레이 (ms)
-const slideDelays = [30000, 15000, 95000]
+// 슬라이드별 영상 + 딜레이(ms). delay는 각 영상 길이에 맞춰 한 번 재생 후 다음으로 전환
+const videoSlides = [
+  { src: '/video-cover.mp4', delay: 30000 },
+  { src: '/video-cover02.mp4', delay: 15000 },
+  { src: '/video-cover03.mp4', delay: 95000 },
+  { src: '/video-cover04.mp4', delay: 30000 },
+  { src: '/video-cover05.mp4', delay: 30000 },
+  { src: '/video-cover06.mp4', delay: 60000 },
+  { src: '/video-cover07.mp4', delay: 30000 },
+  { src: '/video-cover08.mp4', delay: 30000 },
+  { src: '/video-cover09.mp4', delay: 60000 },
+  { src: '/video-cover10.mp4', delay: 228000 },
+  { src: '/video-cover11.mp4', delay: 135000 }
+]
 
 // Swiper 인스턴스 참조
 const swiperRef = ref<any>(null)
@@ -48,7 +60,7 @@ const stopAutoplay = (): void => {
 // 슬라이드 변경 시 딜레이와 비디오 제어
 const onSlideChange = (swiper: any): void => {
   const index = swiper.realIndex
-  const delay = slideDelays[index] || 5000
+  const delay = videoSlides[index]?.delay || 5000
 
   // autoplay delay 업데이트
   swiper.params.autoplay.delay = delay
@@ -89,28 +101,14 @@ onBeforeUnmount(() => {
     loop
     effect="fade"
     :modules="modules"
-    :autoplay="{ delay: slideDelays[0], disableOnInteraction: false }"
+    :autoplay="{ delay: videoSlides[0].delay, disableOnInteraction: false }"
     @swiper="onSwiper"
     @slide-change-transition-end="onSlideChange"
   >
-    <swiper-slide>
+    <swiper-slide v-for="(v, idx) in videoSlides" :key="idx">
       <router-link to="/ev-screen/hub" class="page-ev-screen">
         <video autoplay muted playsinline loop>
-          <source src="/video-cover.mp4" type="video/mp4" />
-        </video>
-      </router-link>
-    </swiper-slide>
-    <swiper-slide>
-      <router-link to="/ev-screen/hub" class="page-ev-screen">
-        <video autoplay muted playsinline loop>
-          <source src="/video-cover02.mp4" type="video/mp4" />
-        </video>
-      </router-link>
-    </swiper-slide>
-    <swiper-slide>
-      <router-link to="/ev-screen/hub" class="page-ev-screen">
-        <video autoplay muted playsinline loop>
-          <source src="/video-cover03.mp4" type="video/mp4" />
+          <source :src="v.src" type="video/mp4" />
         </video>
       </router-link>
     </swiper-slide>

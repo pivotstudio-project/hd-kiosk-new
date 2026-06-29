@@ -4,13 +4,9 @@ out
 .DS_Store
 .eslintcache
 *.log*
-/src/renderer/public/video-cover.mp4
-/src/renderer/public/video-cover02.mp4
-/src/renderer/public/video-cover03.mp4
-/src/renderer/public/video-cover03.mov
-/src/renderer/public/video-cover04.mov
-/src/renderer/public/video-cover05.mov
-/src/renderer/public/video-cover06.mov
+
+# 대용량 원본 소스 영상(.mov 등)은 커밋하지 않음. 압축된 .mp4(100MB 미만)만 커밋해 git으로 관리
+/src/renderer/public/*.mov
 
 package-lock.json
 .env

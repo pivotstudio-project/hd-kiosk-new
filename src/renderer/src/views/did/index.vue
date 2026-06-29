@@ -23,15 +23,24 @@ import img2 from '../../assets/did-cover02.jpg'
 import img3 from '../../assets/did-cover03.jpg'
 import img4 from '../../assets/did-cover04.jpg'
 import img5 from '../../assets/did-cover05.jpg'
+import img8 from '../../assets/did-cover08.jpg'
 
 const modules = [EffectFade, Autoplay]
 
-const originalSlides = [
+// 셔플 대상은 이미지 슬라이드(cover01~05)만.
+const shuffleSlides = [
   { type: 'image', to: '/did/hub', img: img1, delay: 5000 },
   { type: 'image', to: '/did/hub', img: img2, delay: 5000 },
   { type: 'image', to: '/did/hub', img: img3, delay: 5000 },
   { type: 'image', to: '/did/hub', img: img4, delay: 5000 },
-  { type: 'image', to: '/did/hub', img: img5, delay: 5000 },
+  { type: 'image', to: '/did/hub', img: img5, delay: 5000 }
+]
+
+// did-cover08 → 버튼(custom) 슬라이드 순서는 고정으로 꼬리에 붙여
+// did-cover08이 항상 버튼 영역 바로 앞에 오도록 한다.
+const tailSlides = [
+  // did-cover08: 클릭해도 이동 없음(to 미지정)
+  { type: 'image', img: img8, delay: 5000 },
   { type: 'custom', delay: 30000 }
 ]
 
@@ -53,8 +62,8 @@ onMounted(async () => {
     const config = await ipcRenderer.invoke('get-page-config')
     allPages.value = config || []
     
-    // 2. 슬라이드 셔플 후 할당
-    slides.value = shuffle(originalSlides)
+    // 2. 이미지 슬라이드만 셔플하고, did-cover08 + 버튼 슬라이드는 고정 꼬리로 붙임
+    slides.value = [...shuffle(shuffleSlides), ...tailSlides]
     
     // 3. 데이터가 준비되었음을 알림
     isLoaded.value = true
@@ -85,6 +94,11 @@ onMounted(async () => {
         <img :src="slide.img" alt="이미지" />
       </router-link>
 
+      <!-- 링크 없는 이미지 슬라이드 (did-cover08 등): 클릭해도 이동 없음 + 높이에 맞춤 -->
+      <div v-else-if="slide.type === 'image'" class="page-common page-common--contain">
+        <img :src="slide.img" alt="이미지" />
+      </div>
+
       <section v-else-if="slide.type === 'custom' && groupB.length > 0" class="page-did-hub">
         <img class="logo" src="/logo01.png" />
         <div class="page-did-hub__contents">
@@ -96,3 +110,13 @@ onMounted(async () => {
     </swiper-slide>
   </swiper>
 </template>
+
+<style scoped>
+/* did-cover08처럼 세로로 긴 이미지는 너비가 아닌 높이에 맞춰 화면 안에 들어오게 */
+.page-common.page-common--contain :deep(img) {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+</style>
