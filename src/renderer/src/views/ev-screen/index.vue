@@ -27,15 +27,28 @@ const swiperRef = ref<any>(null)
 
 const onSwiper = (swiper: any): void => {
   swiperRef.value = swiper
+  // 초기 진입 시 첫 슬라이드만 재생 (나머지는 정지 상태 유지)
+  playCurrentVideo(swiper)
 }
 
-// 현재 활성화된 슬라이드의 비디오 재생
+// 활성 슬라이드의 비디오만 재생하고, 나머지(복제 슬라이드 포함)는 모두 정지.
+// 11개 비디오가 동시에 디코딩되며 키오스크가 느려지던 문제 방지.
 const playCurrentVideo = (swiper: any): void => {
+  if (!swiper) return
   const activeSlide = swiper.slides[swiper.activeIndex]
-  const video = activeSlide.querySelector('video') as HTMLVideoElement
-  if (video) {
-    video.currentTime = 0
-    video.play().catch(() => {})
+  const activeVideo = activeSlide?.querySelector('video') as HTMLVideoElement | null
+
+  const allVideos = swiper.el.querySelectorAll('video') as NodeListOf<HTMLVideoElement>
+  allVideos.forEach((v) => {
+    if (v !== activeVideo) {
+      v.pause()
+      v.currentTime = 0
+    }
+  })
+
+  if (activeVideo) {
+    activeVideo.currentTime = 0
+    activeVideo.play().catch(() => {})
   }
 }
 
@@ -107,7 +120,7 @@ onBeforeUnmount(() => {
   >
     <swiper-slide v-for="(v, idx) in videoSlides" :key="idx">
       <router-link to="/ev-screen/hub" class="page-ev-screen">
-        <video autoplay muted playsinline loop>
+        <video muted playsinline loop preload="metadata">
           <source :src="v.src" type="video/mp4" />
         </video>
       </router-link>
