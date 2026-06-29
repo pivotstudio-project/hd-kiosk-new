@@ -100,7 +100,7 @@ onMounted(async () => {
       </div>
 
       <section v-else-if="slide.type === 'custom' && groupB.length > 0" class="page-did-hub">
-        <img class="logo" src="/logo01.png" />
+        <img class="logo" :src="'./logo01.png'" />
         <div class="page-did-hub__contents">
             <h1>{{ groupB[0]?.label }}</h1>
             <p>현대자동차의 특별하고 스마트한<br />월별 구매혜택/차종별 구매혜택</p>

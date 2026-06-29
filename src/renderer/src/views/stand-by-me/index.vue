@@ -19,6 +19,6 @@ const openLink = (pageId: string): void => {
 
 <template>
   <div class="page-common" @click="openLink('v2l')">
-    <img src="/stb-cover.png" />
+    <img :src="'./stb-cover.png'" />
   </div>
 </template>

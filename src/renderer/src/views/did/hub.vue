@@ -40,7 +40,7 @@ onMounted(async () => {
 <template>
   <section class="page-did-hub">
     <button class="quit-button" @click="quitApp">앱 종료</button>
-    <img class="logo" src="/logo01.png" />
+    <img class="logo" :src="'./logo01.png'" />
     
     <div v-if="groupB && groupB.length > 0" class="page-did-hub__contents">
       <h1>{{ groupB[0]?.label }}</h1>
