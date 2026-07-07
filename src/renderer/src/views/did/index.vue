@@ -1,22 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { EffectFade, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/effect-fade'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-const { ipcRenderer } = window.electron
-
-const allPages = ref<any[]>([])
-const groupB = computed(() => allPages.value.filter((page) => page.group === 'B'))
-
-const openLink = (pageId: string, pageName: string): void => {
-  if (pageId) {
-    router.push({ name: 'webview', query: { id: pageId, name: pageName, type: 'did' } })
-  }
-}
+import DidBenefitBlocks from '../../components/DidBenefitBlocks.vue'
 
 import img1 from '../../assets/did-cover01.jpg'
 import img2 from '../../assets/did-cover02.jpg'
@@ -56,20 +44,10 @@ function shuffle<T>(array: T[]): T[] {
   return result
 }
 
-onMounted(async () => {
-  // 1. 데이터 먼저 가져오기
-  try {
-    const config = await ipcRenderer.invoke('get-page-config')
-    allPages.value = config || []
-    
-    // 2. 이미지 슬라이드만 셔플하고, did-cover08 + 버튼 슬라이드는 고정 꼬리로 붙임
-    slides.value = [...shuffle(shuffleSlides), ...tailSlides]
-    
-    // 3. 데이터가 준비되었음을 알림
-    isLoaded.value = true
-  } catch (error) {
-    console.error("Config 로드 실패:", error)
-  }
+onMounted(() => {
+  // 이미지 슬라이드만 셔플하고, did-cover08 + 버튼 슬라이드는 고정 꼬리로 붙임
+  slides.value = [...shuffle(shuffleSlides), ...tailSlides]
+  isLoaded.value = true
 })
 </script>
 
@@ -99,14 +77,8 @@ onMounted(async () => {
         <img :src="slide.img" alt="이미지" />
       </div>
 
-      <section v-else-if="slide.type === 'custom' && groupB.length > 0" class="page-did-hub">
-        <img class="logo" :src="'./logo01.png'" />
-        <div class="page-did-hub__contents">
-            <h1>{{ groupB[0]?.label }}</h1>
-            <p>현대자동차의 특별하고 스마트한<br />월별 구매혜택/차종별 구매혜택</p>
-            <button @click="openLink(groupB[0]?.id, groupB[0]?.pageName)">자세히 보기</button>
-          </div>
-      </section>
+      <!-- 커스텀(마지막) 슬라이드: 구매혜택 2블록 (선택화면과 공용 컴포넌트) -->
+      <DidBenefitBlocks v-else-if="slide.type === 'custom'" />
     </swiper-slide>
   </swiper>
 </template>
