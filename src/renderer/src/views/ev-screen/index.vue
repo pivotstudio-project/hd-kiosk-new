@@ -8,13 +8,20 @@ import 'swiper/css/effect-fade'
 const modules = [EffectFade, Autoplay]
 
 // 슬라이드별 영상 + 딜레이(ms). delay는 각 영상 길이에 맞춰 한 번 재생 후 다음으로 전환
+// 순서: 아반떼 3개 → 그랜저 3개(cover04~06) → 나머지 기존 순서
 const videoSlides = [
-  { src: './video-cover.mp4', delay: 30000 },
-  { src: './video-cover02.mp4', delay: 15000 },
-  { src: './video-cover03.mp4', delay: 95000 },
+  // 아반떼 (신규)
+  { src: './video-avante01.mp4', delay: 30000 },
+  { src: './video-avante02.mp4', delay: 30000 },
+  { src: './video-avante03.mp4', delay: 30000 },
+  // 그랜저
   { src: './video-cover04.mp4', delay: 30000 },
   { src: './video-cover05.mp4', delay: 30000 },
   { src: './video-cover06.mp4', delay: 60000 },
+  // 나머지 (기존 순서)
+  { src: './video-cover.mp4', delay: 30000 },
+  { src: './video-cover02.mp4', delay: 15000 },
+  { src: './video-cover03.mp4', delay: 95000 },
   { src: './video-cover07.mp4', delay: 30000 },
   { src: './video-cover08.mp4', delay: 30000 },
   { src: './video-cover09.mp4', delay: 60000 },

@@ -219,12 +219,12 @@ ipcMain.on('install-update', () => {
 
   const pages: PageConfig[] = [
     {
-      // The new GRANDEUR 버튼 전용 (허브 그룹 미지정 → 자동 목록엔 안 나오고 버튼으로만 진입)
-      id: 'grandeur',
-      label: 'The new GRANDEUR',
-      pageName: 'The new GRANDEUR',
-      url: 'https://www.hyundai.com/kr/ko/e/vehicles/the-new-grandeur/intro',
-      // 그랜저 콘텐츠(#carModelInfo) 외 비-그랜저 요소 숨김:
+      // The all-new AVANTE 버튼 전용 (허브 그룹 미지정 → 자동 목록엔 안 나오고 버튼으로만 진입)
+      id: 'avante',
+      label: 'The all-new AVANTE',
+      pageName: 'The all-new AVANTE',
+      url: 'https://www.hyundai.com/kr/ko/e/vehicles/the-all-new-avante/intro',
+      // 아반떼 콘텐츠(#carModelInfo) 외 비-차종 요소 숨김:
       // 헤더(GNB)/유틸바/푸터/플로팅/브레드크럼 + 자동으로 뜨는 구매상담 팝업
       // + 신청/이탈로 빠지는 CTA 버튼바 2종:
       //   · 인트로 showroom CTA(구매상담신청/내차만들기/시승신청)
