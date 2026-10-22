@@ -244,6 +244,27 @@ ipcMain.on('install-update', () => {
       ]
     },
     {
+      // The all-new TUCSON 버튼 전용 (허브 그룹 미지정 → 자동 목록엔 안 나오고 버튼으로만 진입)
+      id: 'tucson',
+      label: 'The all-new TUCSON',
+      pageName: 'The all-new TUCSON',
+      url: 'https://www.hyundai.com/kr/ko/e/vehicles/the-all-new-tucson/intro',
+      // 아반떼와 동일한 Nuxt 템플릿 → 숨김 셀렉터 동일 재사용
+      removeSelectors: [
+        '.header',
+        '.wrap-header',
+        '.util',
+        '.foot-area',
+        '.area-floating',
+        '.top-breadcrumb',
+        '.breadcrumb',
+        '.v-modal',
+        '.recommend-popup',
+        '.menu-showroom .btn-group',
+        '.benefits .detail .btn-group'
+      ]
+    },
+    {
       id: 'explorer',
       label: '내 차 추천받기',
       pageName: '내 차 추천받기',

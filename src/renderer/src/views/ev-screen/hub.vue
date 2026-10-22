@@ -30,6 +30,11 @@ const openLink = (pageId: string, pageName: string): void => {
   }
 }
 
+// The all-new TUCSON 버튼 → 투싼 인트로 페이지로 이동
+const openTucson = (): void => {
+  router.push({ name: 'webview', query: { id: 'tucson', name: 'The all-new TUCSON', type: 'ev' } })
+}
+
 // The all-new AVANTE 버튼 → 아반떼 인트로 페이지로 이동
 const openAvante = (): void => {
   router.push({ name: 'webview', query: { id: 'avante', name: 'The all-new AVANTE', type: 'ev' } })
@@ -66,15 +71,16 @@ onBeforeMount(async () => {
 
       <div class="page-hub__btn-group">
         <div
-          v-for="(row, rowIndex) in splitIntoRows(groupA, [3, 3, 4])"
+          v-for="(row, rowIndex) in splitIntoRows(groupA, [2, 4, 4])"
           :key="'row-' + rowIndex"
           class="btn-row"
         >
           <template v-for="item in row" :key="item.id">
-            <!-- '내 차 추천받기'(explorer) 앞에 The all-new AVANTE 버튼 -->
-            <button v-if="item.id === 'explorer'" class="btn-feature" @click="openAvante">
-              The all-new AVANTE
-            </button>
+            <!-- '내 차 추천받기'(explorer) 앞에 신차 강조 버튼: TUCSON → AVANTE 순 -->
+            <template v-if="item.id === 'explorer'">
+              <button class="btn-feature" @click="openTucson">The all-new TUCSON</button>
+              <button class="btn-feature" @click="openAvante">The all-new AVANTE</button>
+            </template>
 
             <button @click="openLink(item.id, item.pageName)">
               <span v-html="item.label"></span>
