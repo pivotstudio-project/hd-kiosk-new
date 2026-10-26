@@ -8,5 +8,9 @@ out
 # 대용량 원본 소스 영상(.mov 등)은 커밋하지 않음. 압축된 .mp4(100MB 미만)만 커밋해 git으로 관리
 /src/renderer/public/*.mov
 
+# 루트로 받은 대용량 원본(압축/최적화 전 소스). 가공본만 src에 커밋.
+/*.mp4
+/EV 특화전시_DID 포스터_아반떼, 투싼/
+
 package-lock.json
 .env

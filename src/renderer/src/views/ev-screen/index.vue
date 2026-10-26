@@ -10,6 +10,8 @@ const modules = [EffectFade, Autoplay]
 // 슬라이드별 영상 + 딜레이(ms). delay는 각 영상 길이에 맞춰 한 번 재생 후 다음으로 전환
 // 순서: 아반떼 3개 → 그랜저 3개(cover04~06) → 나머지 기존 순서
 const videoSlides = [
+  // 메인 인트로 (신규, 맨 앞)
+  { src: './video-main.mp4', delay: 30000 },
   // 아반떼 (신규)
   { src: './video-avante01.mp4', delay: 30000 },
   { src: './video-avante02.mp4', delay: 30000 },
@@ -24,7 +26,6 @@ const videoSlides = [
   { src: './video-cover03.mp4', delay: 95000 },
   { src: './video-cover07.mp4', delay: 30000 },
   { src: './video-cover08.mp4', delay: 30000 },
-  { src: './video-cover09.mp4', delay: 60000 },
   { src: './video-cover10.mp4', delay: 228000 },
   { src: './video-cover11.mp4', delay: 135000 }
 ]

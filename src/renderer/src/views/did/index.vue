@@ -6,29 +6,19 @@ import 'swiper/css'
 import 'swiper/css/effect-fade'
 import DidBenefitBlocks from '../../components/DidBenefitBlocks.vue'
 
-import img1 from '../../assets/did-cover01.jpg'
-import img2 from '../../assets/did-cover02.jpg'
-import img3 from '../../assets/did-cover03.jpg'
-import img4 from '../../assets/did-cover04.jpg'
-import img5 from '../../assets/did-cover05.jpg'
-import img8 from '../../assets/did-cover08.jpg'
+import imgAvante from '../../assets/did-poster-avante.jpg'
+import imgTucson from '../../assets/did-poster-tucson.jpg'
 
 const modules = [EffectFade, Autoplay]
 
-// 셔플 대상은 이미지 슬라이드(cover01~05)만.
+// 루핑 포스터: 아반떼 / 투싼 2장만. 탭하면 선택화면(hub)으로 이동.
 const shuffleSlides = [
-  { type: 'image', to: '/did/hub', img: img1, delay: 5000 },
-  { type: 'image', to: '/did/hub', img: img2, delay: 5000 },
-  { type: 'image', to: '/did/hub', img: img3, delay: 5000 },
-  { type: 'image', to: '/did/hub', img: img4, delay: 5000 },
-  { type: 'image', to: '/did/hub', img: img5, delay: 5000 }
+  { type: 'image', to: '/did/hub', img: imgAvante, delay: 5000 },
+  { type: 'image', to: '/did/hub', img: imgTucson, delay: 5000 }
 ]
 
-// did-cover08 → 버튼(custom) 슬라이드 순서는 고정으로 꼬리에 붙여
-// did-cover08이 항상 버튼 영역 바로 앞에 오도록 한다.
+// CTA(구매혜택) 슬라이드는 꼬리에 고정 유지.
 const tailSlides = [
-  // did-cover08: 클릭해도 이동 없음(to 미지정)
-  { type: 'image', img: img8, delay: 5000 },
   { type: 'custom', delay: 30000 }
 ]
 
