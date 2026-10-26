@@ -11,15 +11,14 @@ import imgTucson from '../../assets/did-poster-tucson.jpg'
 
 const modules = [EffectFade, Autoplay]
 
-// 루핑 포스터: 아반떼 / 투싼 2장만. 탭하면 선택화면(hub)으로 이동.
-const shuffleSlides = [
-  { type: 'image', to: '/did/hub', img: imgAvante, delay: 5000 },
-  { type: 'image', to: '/did/hub', img: imgTucson, delay: 5000 }
-]
+const { ipcRenderer } = window.electron
 
-// CTA(구매혜택) 슬라이드는 꼬리에 고정 유지.
+// 루핑 포스터: 아반떼 / 투싼 2장만. 탭하면 이달의 구매혜택(groupB[0]) 웹뷰로 이동.
+const posters = [imgAvante, imgTucson]
+
+// CTA(구매혜택) 슬라이드는 숨김. 다시 노출하려면 아래 항목 주석 해제.
 const tailSlides = [
-  { type: 'custom', delay: 30000 }
+  // { type: 'custom', delay: 30000 }
 ]
 
 const slides = ref<any[]>([])
@@ -34,8 +33,17 @@ function shuffle<T>(array: T[]): T[] {
   return result
 }
 
-onMounted(() => {
-  // 이미지 슬라이드만 셔플하고, did-cover08 + 버튼 슬라이드는 고정 꼬리로 붙임
+onMounted(async () => {
+  // 이달의 구매혜택 링크 (DidBenefitBlocks의 블록 1과 동일). 설정이 없으면 선택화면(hub)으로.
+  const config = (await ipcRenderer.invoke('get-page-config')) || []
+  const benefit = config.filter((page: any) => page.group === 'B')[0]
+  const to = benefit
+    ? { name: 'webview', query: { id: benefit.id, name: benefit.pageName, type: 'did' } }
+    : '/did/hub'
+
+  const shuffleSlides = posters.map((img) => ({ type: 'image', to, img, delay: 5000 }))
+
+  // 이미지 슬라이드만 셔플하고, 꼬리 슬라이드는 고정으로 붙임
   slides.value = [...shuffle(shuffleSlides), ...tailSlides]
   isLoaded.value = true
 })
